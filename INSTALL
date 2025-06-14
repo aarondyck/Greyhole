@@ -1,6 +1,6 @@
 Greyhole Installation Instructions
 ==================================
-
+It's 2025 and there has to be an easier way. There is an install script for Rocky Linux called rocky.sh that can be used to automate the installation. 
 Greyhole comes as RPM or DEB packages. If your distribution supports those, you should definitely install one of them.  
 To do so, you can use this script:
 
