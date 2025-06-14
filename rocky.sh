@@ -1,13 +1,15 @@
-dnf install -y heimdal-devel chkconfig initscripts lm_sensors-libs 
+dnf install -y heimdal-devel chkconfig initscripts lm_sensors-libs mysql-server php-mysqlnd cifs-utils samba-client samba tar wget
 mkdir /greyhole
 mkdir /greyhole/lz
 mkdir /greyhole/drives
 mkdir /greyhole/drives/drive01
 mkdir /greyhole/drives/drive02
-wget https://github.com/gboudreau/Greyhole/releases/download/0.15.25/greyhole-0.15.25.tar.gz
-tar -xvf greyhole-0.15.25.tar.gz
-cd greyhole-0.15.25
-wget https://github.com/aarondyck/Greyhole/releases/0.16.00/greyhole-smb.systemd
+semanage fcontext -a -t samba_share_t "/greyhole/lz(/.*)?"
+restorecon -Rv /greyhole/
+setsebool -P samba_export_all_rw=1
+wget https://github.com/aarondyck/Greyhole/archive/refs/tags/v0.15.99.tar.gz
+tar -xvf v0.15.99.tar.gz
+cd v0.15.99
 GREYHOLE_INSTALL_DIR=`pwd`
 mkdir -p /var/spool/greyhole
 mkdir -p /var/spool/greyhole
