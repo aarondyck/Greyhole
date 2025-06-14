@@ -7,7 +7,7 @@ mkdir /greyhole/drives/drive02
 semanage fcontext -a -t samba_share_t "/greyhole/lz(/.*)?"
 restorecon -Rv /greyhole/
 setsebool -P samba_export_all_rw=1
-wget https://github.com/aarondyck/Greyhole/archive/refs/tags/v0.15.99.tar.gz
+wget https://github.com/aarondyck/Greyhole/releases/download/v0.16.00.00/greyhole-rocky_v0.16.00.00.tar.gz
 tar -xvf v0.15.99.tar.gz
 cd v0.15.99
 GREYHOLE_INSTALL_DIR=`pwd`
