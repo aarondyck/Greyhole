@@ -4,9 +4,9 @@ set -e
 
 if [[ $# -lt 1 ]]; then
 	>&2 echo "Build the Greyhole VFS module for a specific Samba version."
-	>&2 echo "  Usage: $0 SAMBA_VERSION"
-	>&2 echo "  Specify 'current' as the SAMBA_VERSION to compile the VFS module for the currently installed Samba version, and create the required symlink in the Samba VFS library folder."
-	exit 1
+	>&2 echo "  Usage: $0 SAMBA_VERSION [options]"
+	>&2 echo "  Assuming 'current' as the SAMBA_VERSION to compile the VFS module for the currently installed Samba version."
+	
 fi
 
 if [[ $EUID -ne 0 ]]; then
@@ -30,6 +30,10 @@ if [[ -f /usr/bin/python2 ]]; then
 fi
 
 version=$1
+if [[ ! -n $version ]]; then
+        version="current"
+fi
+if [[ ${version} -z
 create_symlink=0
 if [[ ${version} = "current" ]]; then
 	create_symlink=1
@@ -52,13 +56,13 @@ echo "- Installing build-essential / gcc (etc.)"
 if command -v apt-get >/dev/null; then
     apt-get -y install build-essential python3-dev libgnutls28-dev pkg-config >/dev/null || true
 fi
-if command -v yum >/dev/null; then
-    yum -y install patch gcc python-devel gnutls-devel make rpcgen >/dev/null || true
+if command -v dnf >/dev/null; then
+    dnf -y install patch gcc python-devel gnutls-devel make rpcgen >/dev/null || true
 fi
 if [[ ${M} -ge 4 ]]; then
     if [[ ${m} -ge 12 ]]; then
-        if command -v yum >/dev/null; then
-            yum -y install perl-CPAN >/dev/null || true
+        if command -v dnf >/dev/null; then
+            dnf -y install perl-CPAN >/dev/null || true
         fi
         echo "- Installing Parse::Yapp::Driver perl module"
         # shellcheck disable=SC2034
@@ -70,8 +74,8 @@ if [[ ${M} -ge 4 ]]; then
         if command -v apt-get >/dev/null; then
             apt-get -y install zlib1g-dev flex locales >/dev/null || true
         fi
-        if command -v yum >/dev/null; then
-            yum -y install zlib-devel >/dev/null || true
+        if command -v dnf >/dev/null; then
+            dnf -y install zlib-devel >/dev/null || true
         fi
     fi
     if [[ ${m} -ge 14 ]]; then
@@ -79,9 +83,9 @@ if [[ ${M} -ge 4 ]]; then
             echo "- Installing bison & flex"
             apk add bison flex >/dev/null || true
         fi
-        if command -v yum >/dev/null; then
+        if command -v dnf >/dev/null; then
             echo "- Installing bison & flex"
-            yum -y install bison flex >/dev/null || true
+            dnf -y install bison flex >/dev/null || true
             echo "- Installing JSON perl module"
             cpan install JSON >/dev/null 2>&1
         fi
@@ -91,9 +95,9 @@ if [[ ${M} -ge 4 ]]; then
             echo "- Installing com_err & heimdal-devel"
             apt-get -y install comerr-dev heimdal-multidev >/dev/null || true
         fi
-        if command -v yum >/dev/null; then
+        if command -v dnf >/dev/null; then
             echo "- Installing e2fsprogs-devel & heimdal-devel"
-            yum -y install e2fsprogs-devel heimdal-devel >/dev/null || true
+            dnf -y install e2fsprogs-devel heimdal-devel >/dev/null || true
         fi
     fi
     if [[ ${m} -ge 17 && ${for_debian_ubuntu} -eq 1 ]]; then
@@ -182,7 +186,7 @@ if [[ "${NEEDS_CONFIGURE}" = "1" ]]; then
     elif [[ ${m} -ge 9 ]]; then
       CONF_OPTIONS=${CONF_OPTIONS}' --without-json-audit --without-libarchive'
     fi
-    if [[ ${m} -ge 15 && ! -f /sbin/apk && ! -f /bin/yum ]]; then
+    if [[ ${m} -ge 15 && ! -f /sbin/apk && ! -f /bin/dnf ]]; then
       CONF_OPTIONS=${CONF_OPTIONS}' --with-system-heimdalkrb5'
     fi
     if [[ ${m} -ge 17 && ${for_debian_ubuntu} -eq 1 ]]; then
@@ -191,6 +195,9 @@ if [[ "${NEEDS_CONFIGURE}" = "1" ]]; then
     fi
     if [[ ${m} -ge 19 && -f /sbin/apk ]]; then
       CONF_OPTIONS=${CONF_OPTIONS}' --without-libunwind'
+    fi
+    if [[ ${m} -ge 21 }; then
+      CONF_OPTIONS=${CONF_OPTIONS}'  --without-ldb-lmdb'
     fi
     echo "./configure ${CONF_OPTIONS}" > gh_vfs_build.log
     # shellcheck disable=SC2086
