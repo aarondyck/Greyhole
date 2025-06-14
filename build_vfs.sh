@@ -30,10 +30,10 @@ if [[ -f /usr/bin/python2 ]]; then
 fi
 
 version=$1
+create_symlink=0
 if [[ ! -n $version ]]; then
         version="current"
 fi
-if [[ ${version} -z
 create_symlink=0
 if [[ ${version} = "current" ]]; then
 	create_symlink=1
@@ -196,7 +196,7 @@ if [[ "${NEEDS_CONFIGURE}" = "1" ]]; then
     if [[ ${m} -ge 19 && -f /sbin/apk ]]; then
       CONF_OPTIONS=${CONF_OPTIONS}' --without-libunwind'
     fi
-    if [[ ${m} -ge 21 }; then
+    if [[ ${m} -ge 21 ]]; then
       CONF_OPTIONS=${CONF_OPTIONS}'  --without-ldb-lmdb'
     fi
     echo "./configure ${CONF_OPTIONS}" > gh_vfs_build.log
