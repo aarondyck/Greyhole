@@ -1,0 +1,16 @@
+[Unit]
+Description=Greyhole
+Requires=mysqld.service smb.service
+After=syslog.target network.target mysqld.service
+
+[Service]
+Type=simple
+ExecStartPre=/usr/bin/greyhole --test-config
+ExecStart=/usr/bin/greyhole --daemon
+ExecReload=/usr/bin/kill -HUP $MAINPID
+ExecStopPost=/usr/bin/greyhole --process-spool
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
